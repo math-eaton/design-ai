@@ -2,10 +2,10 @@ import Rhino.Geometry as rh
 
 class Agent:
 
-    def __init__(self, pt, r, names, adjacencies):
+    def __init__(self, pt, ed, names, adjacencies):
 
         self.cp = pt
-        self.radius = r
+        self.edge = ed
         self.name = names
         self.adjacency = adjacencies
         self.neighbors = []
@@ -22,7 +22,7 @@ class Agent:
 
         amount = 0
 
-        if d < self.radius + other.radius:
+        if d < self.edge + other.edge:
 
             pt_2 = other.cp
             pt_1 = self.cp
@@ -33,7 +33,7 @@ class Agent:
             # change vector magnitude to 1
             v.Unitize()
             # set magnitude to half the overlap distance
-            v *= (self.radius + other.radius - d) / 2
+            v *= (self.edge + other.edge - d) / 2
             # multiply by alpha parameter to control
             # amount of movement at each time step
             v *= alpha
@@ -59,7 +59,7 @@ class Agent:
 
         amount = 0
 
-        if d > self.radius + other.radius:
+        if d > self.edge + other.edge:
 
             pt_2 = other.cp
             pt_1 = self.cp
@@ -70,7 +70,7 @@ class Agent:
             # change vector magnitude to 1
             v.Unitize()
             # set magnitude to half the overlap distance
-            v *= (d - (self.radius + other.radius)) / 2
+            v *= (d - (self.edge + other.edge)) / 2
             # multiply by alpha parameter to control
             # amount of movement at each time step
             v *= alpha
@@ -90,7 +90,7 @@ class Agent:
         return amount
 
     # def get_circle(self):
-    #     return rh.Circle(self.cp, self.radius)
+    #     return rh.Circle(self.cp, self.edge)
 
     # replace circle params with rectangle
     def get_rectangle(self):
@@ -100,7 +100,7 @@ class Agent:
          plane_vector = rh.Vector3d(0,0,1)
          plane_rect = rh.Plane(center_xy, plane_vector)
 
-         return rh.Rectangle3d(plane_rect, self.radius, self.radius)
+         return rh.Rectangle3d(plane_rect, self.edge, self.edge)
 
 
 # these must match gh python component ins
