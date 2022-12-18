@@ -3,10 +3,10 @@ import Rhino.Geometry as rh
 
 class Agent:
 
-    def __init__(self, pt, r):
+    def __init__(self, pt, ed):
 
         self.cp = pt
-        self.radius = r
+        self.edge = ed
         self.neighbors = []
 
     # method for adding another instance to a list of neighbors
@@ -20,7 +20,7 @@ class Agent:
 
         amount = 0
 
-        if d < self.radius + other.radius:
+        if d < self.edge + other.edge:
 
             pt_2 = other.cp
             pt_1 = self.cp
@@ -31,7 +31,7 @@ class Agent:
             # change vector magnitude to 1
             v.Unitize()
             # set magnitude to half the overlap distance
-            v *= (self.radius + other.radius - d) / 2
+            v *= (self.edge + other.edge - d) / 2
             # multiply by alpha parameter to control
             # amount of movement at each time step
             v *= alpha
@@ -57,7 +57,7 @@ class Agent:
 
         amount = 0
 
-        if d > self.radius + other.radius:
+        if d > self.edge + other.edge:
 
             pt_2 = other.cp
             pt_1 = self.cp
@@ -68,7 +68,7 @@ class Agent:
             # change vector magnitude to 1
             v.Unitize()
             # set magnitude to half the overlap distance
-            v *= (d - (self.radius + other.radius)) / 2
+            v *= (d - (self.edge + other.edge)) / 2
             # multiply by alpha parameter to control
             # amount of movement at each time step
             v *= alpha
@@ -88,26 +88,26 @@ class Agent:
         return amount
 
     # def get_circle(self):
-    #     return rh.Circle(self.cp, self.radius)
+    #     return rh.Circle(self.cp, self.edge)
 
     # replace circle params with rectangle
-def get_rectangle(self):
+    def get_rectangle(self):
 
-    # extract layout plane for rectangle draw
-    center_xy = self.cp
-    plane_vector = rh.Vector3d(0,0,1)
-    plane_rect = rh.Plane(center_xy, plane_vector)
+        # extract layout plane for rectangle draw
+        center_xy = self.cp
+        plane_vector = rh.Vector3d(0,0,1)
+        plane_rect = rh.Plane(center_xy, plane_vector)
 
-    return rh.Rectangle3d(plane_rect, self.edge, self.edge)
+        return rh.Rectangle3d(plane_rect, self.edge, self.edge)
 
 
 # these must match gh python component ins!!!
-def run(pts, radii, max_iters, alpha):
+def run(pts, edges, max_iters, alpha):
 
     agents = []
 
     for i, pt in enumerate(pts):
-        my_agent = Agent(pt, radii[i])
+        my_agent = Agent(pt, edges[i])
         agents.append(my_agent)
 
     # for each agent in the list, add the previous agent as its neighbor
@@ -140,6 +140,6 @@ def run(pts, radii, max_iters, alpha):
     rects = []
 
     for agent in agents:
-        rects.append(agent.rect_rectangle())
+        rects.append(agent.get_rectangle())
 
     return rects, iters
