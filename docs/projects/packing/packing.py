@@ -87,10 +87,21 @@ class Agent:
 
         return amount
 
-    def get_circle(self):
-        return rh.Circle(self.cp, self.radius)
+    # def get_circle(self):
+    #     return rh.Circle(self.cp, self.radius)
+
+    # replace circle params with rectangle
+def get_rectangle(self):
+
+    # extract layout plane for rectangle draw
+    center_xy = self.cp
+    plane_vector = rh.Vector3d(0,0,1)
+    plane_rect = rh.Plane(center_xy, plane_vector)
+
+    return rh.Rectangle3d(plane_rect, self.edge, self.edge)
 
 
+# these must match gh python component ins!!!
 def run(pts, radii, max_iters, alpha):
 
     agents = []
@@ -125,9 +136,10 @@ def run(pts, radii, max_iters, alpha):
 
     print("process ran for {} iterations".format(i))
 
-    circles = []
+    # circles = []
+    rects = []
 
     for agent in agents:
-        circles.append(agent.get_circle())
+        rects.append(agent.rect_rectangle())
 
-    return circles, iters
+    return rects, iters
